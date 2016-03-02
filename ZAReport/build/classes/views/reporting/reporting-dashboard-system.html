@@ -1,0 +1,88 @@
+<div class="main-wrapper" ng-if="hasNoData == false">
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        BROWSERS
+                        <a href="#/" class="btn btn-default hvr-icon-bounce">Details</a>
+                    </h4>
+                </div>
+                <div class="panel-body col-lg-12 col-md-12 dashboard-system-panel">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/browsers/browser-chrome.png" alt="Google Chrome"/>
+                            <span class="system-stats">{[{chromeSessions | percentage:allBrowsersSessions:2}]}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/browsers/browser-firefox.png" alt="Mozilla Firefox"/>
+                            <span class="system-stats">{[{firefoxSessions | percentage:allBrowsersSessions:2}]}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/browsers/browser-ie.png" alt="Internet Explorer"/>
+                            <span class="system-stats">{[{ieSessions | percentage:allBrowsersSessions:2}]}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/browsers/browser-safari.png" alt="Apple Safari"/>
+                            <span class="system-stats">{[{safariSessions | percentage:allBrowsersSessions:2}]}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/browsers/browser-opera.png" alt="Opera"/>
+                            <span class="system-stats">{[{operaSessions | percentage:allBrowsersSessions:2}]}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <h3 style="font-size: 30px;">OTHERS</h3>
+                            <span class="system-stats">{[{otherBrowsersSessions | percentage:allBrowsersSessions:2}]}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        OPERATING SYSTEMS
+                        <a href="#/" class="btn btn-default hvr-icon-bounce">Details</a>
+                    </h4>
+                </div>
+                <div class="panel-body col-lg-12 col-md-12 dashboard-system-panel">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/os/os-win.png" alt="Microsoft Windows"/>
+                            <span class="system-stats">{[{windowsSessions | percentage:allOSSessions:2}]}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/os/os-osx.png" alt="Apple OS X"/>
+                            <span class="system-stats">{[{macOSSessions | percentage:allOSSessions:2}]}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/os/os-linux.png" alt="Linux"/>
+                            <span class="system-stats">{[{linuxSessions | percentage:allOSSessions:2}]}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/os/os-android.png" alt="Android"/>
+                            <span class="system-stats">{[{androidSessions | percentage:allOSSessions:2}]}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <img src="/assets/images/os/os-ios.png" alt="iOS"/>
+                            <span class="system-stats">{[{iOSSessions | percentage:allOSSessions:2}]}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 dashboard-system-icon hvr-buzz-out">
+                            <h3 style="font-size: 30px;">OTHERS</h3>
+                            <span class="system-stats">{[{otherOSSessions | percentage:allOSSessions:2}]}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-if="hasNoData == true">
+    <ng-include src="'/views/reporting/no-data.html'"></ng-include>
+</div>

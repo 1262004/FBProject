@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook Login JavaScript Example</title>
+    <meta charset="UTF-8">
+    <style>
+        #status {
+            white-space: pre;
+            font-family: monospace;
+        }
+    </style>
+
+</head>
+<body>
+    <script>
+        // This is called with the results from from FB.getLoginStatus().
+        function statusChangeCallback(response) {
+            console.log('statusChangeCallback');
+            console.log(response);
+            // The response object is returned with a status field that lets the
+            // app know the current login status of the person.
+            // Full docs on the response object can be found in the documentation
+            // for FB.getLoginStatus().
+            if (response.status === 'connected') {
+                // Logged into your app and Facebook.
+                var access_token =   FB.getAuthResponse()['accessToken'];
+                console.log('Access Token = '+ access_token);
+                testAPI();
+            } else if (response.status === 'not_authorized') {
+                // The person is logged into Facebook, but not your app.
+                console.log( 'Please log ' + 'into this app.');
+                document.getElementById('status').innerHTML = 'Please log ' +
+                    'into this app.';
+            } else {
+                FB.login(function(response){
+                     if (response.authResponse) {
+                         var access_token =   FB.getAuthResponse()['accessToken'];
+                         console.log('Access Token = '+ access_token);
+                         testAPI();
+                     }
+                },
+                    {
+                        scope: 'public_profile,email,manage_pages,publish_pages,user_friends,user_status,read_page_mailboxes,publish_actions,ads_read'
+                    }
+                 );
+                // The person is not logged into Facebook, so we're not sure if
+                // they are logged into this app or not.
+                console.log('Please log ' + 'into Facebook.');
+                document.getElementById('status').innerHTML = 'Please log ' +
+                    'into Facebook.';
+            }
+        }
+
+        function fbLogoutUser() {
+            FB.getLoginStatus(function(response) {
+                if (response && response.status === 'connected') {
+                    FB.logout(function(response) {
+                        document.location.reload();
+                    });
+                }
+            });
+        }
+        // This function is called when someone finishes with the Login
+        // Button.  See the onlogin handler attached to it in the sample
+        // code below.
+        function checkLoginState() {
+            FB.getLoginStatus(function(response) {
+                statusChangeCallback(response);
+            });
+        }
+        window.fbAsyncInit = function() {
+
+            console.log("Go to init");
+            FB.init({
+                //appId: '178822032455124',
+                //appId      : '405145012939601',
+                appId: '1106463969371299',
+
+                cookie: true, // enable cookies to allow the server to access 
+                // the session
+                xfbml: true, // parse social plugins on this page
+                version: 'v2.1' // use version 2.2
+            });
+            // Now that we've initialized the JavaScript SDK, we call 
+            // FB.getLoginStatus().  This function gets the state of the
+            // person visiting this page and can return one of three states to
+            // the callback you provide.  They can be:
+            //
+            // 1. Logged into your app ('connected')
+            // 2. Logged into Facebook, but not your app ('not_authorized')
+            // 3. Not logged into Facebook and can't tell if they are logged into
+            //    your app or not.
+            //
+            // These three cases are handled in the callback function.
+
+            //FB.getLoginStatus(function(response) {
+            //  statusChangeCallback(response);
+            //});
+            FB.Event.subscribe('auth.authResponseChange', function(response) {
+                if (response.authResponse) {
+                    console.log("Auth change: " + response.authResponse);
+                }
+            });
+            //checkLoginState();
+            //testAPI();
+
+        };
+
+
+        // Load the SDK asynchronously
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "http://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        // Here we run a very simple test of the Graph API after login is
+        // successful.  See statusChangeCallback() for when this call is made.
+        function testAPI() {
+            console.log('Welcome!  Fetching your information.... ');
+            FB.api('/me?fields=age_range,birthday', function(response) {
+                console.log('API Result: ');
+                console.log(response);
+                document.getElementById('status').innerHTML =
+                    'Thanks for logging in, ' + response.birthday + '!';
+            });
+
+            FB.api(
+                "/me/friends",
+                function(response) {
+                    console.log("call");
+                    if (response && !response.error) {
+                        console.log(response);
+                    }
+                }
+            );
+
+            FB.api(
+                "/me/accounts",
+                function(response) {
+                    console.log("call accounts");
+                    if (response && !response.error) {
+                        /* handle the result */
+                        console.log(response.data[0].id);
+
+                        console.log(response.data[0].access_token);
+                        var tokenparent = response.data[0].access_token; // page token
+
+
+
+                        //Page Subscribed Apps Read
+                        FB.api(
+                            "/" + response.data[0].id + "/subscribed_apps?access_token=" + tokenparent,
+                            function(response) {
+                                console.log("page subscribe app");
+                                console.log(response);
+                                if (response && !response.error) {
+                                    /* handle the result */
+                                }
+                            }
+                        );
+                        //end Page Subscribed Apps Read
+
+
+                        // Graph API Targeting Options
+                        FB.api(
+                            "/search", {
+                                "type": "adeducationschool",
+                                "q": "a"
+                            },
+                            function(response) {
+                                console.log("targeting option");
+                                console.log(response);
+                                if (response && !response.error) {
+                                    /* handle the result */
+                                }
+                            }
+                        );
+
+
+
+
+                        //Page Subscribed Apps Create
+                        FB.api(
+                            "/" + response.data[0].id + "/subscribed_apps?access_token=" + tokenparent,
+                            "POST", {
+                                "message": "This is a test comment"
+                            },
+                            function(response) {
+                                console.log("page post subscribe");
+                                if (response && !response.error) {
+                                    console.log(response);
+                                }
+                            }
+                        );
+                        //end Page Subscribed Apps Create
+
+
+
+
+                        FB.api(
+                            "/" + response.data[0].id + "/conversations?access_token=" + response.data[0].access_token,
+                            function(response) {
+                                console.log("get conversations");
+                                console.log(response);
+
+                                var conversationsID = response.data[0].id;
+
+                                if (response && !response.error) {
+                                    /* handle the result */
+                                    console.log(response.data[0].id);
+
+                                    FB.api(
+                                        "/" + response.data[0].id + "/messages?access_token=" + tokenparent,
+                                        function(response) {
+                                            console.log("get id");
+                                            console.log(response);
+                                            if (response && !response.error) {
+                                                /* handle the result */
+                                                console.log(response.data[0].id);
+
+
+
+                                                // get messsage content
+                                                FB.api(
+                                                    "/" + response.data[0].id + "?access_token=" + tokenparent + "&fields=message",
+                                                    function(response) {
+                                                        console.log("get messsage");
+                                                        console.log(response);
+                                                        if (response && !response.error) {
+                                                            /* handle the result */
+                                                        }
+                                                    }
+                                                );
+
+
+
+                                                //post message fan page
+                                                FB.api(
+                                                    "/" + conversationsID + "/messages?access_token=" + tokenparent,
+                                                    "POST", {
+                                                        "message": "This is a test message"
+                                                    },
+                                                    function(response) {
+                                                        if (response && !response.error) {
+                                                            console.log(response);
+                                                        }
+                                                    }
+                                                );
+                                                // end post message
+
+
+                                                //read comment 
+                                                //934520846615122
+                                                FB.api(
+                                                    "/934500339950506_935018859898654/comments",
+                                                    function(response) {
+                                                        console.log("comment");
+                                                        console.log(response);
+                                                        if (response && !response.error) {
+                                                            /* handle the result */
+                                                        }
+                                                    }
+                                                );
+
+                                                //post comment 
+                                                /* make the API call */
+                                                FB.api(
+                                                    "/934500339950506_935018859898654/comments",
+                                                    "POST", {
+                                                        "message": "This is a test comment auto post"
+                                                    },
+                                                    function(response) {
+                                                        console.log("post comment");
+                                                        if (response && !response.error) {
+                                                            console.log(response);
+                                                        }
+                                                    }
+                                                );
+
+
+                                                //post status on page
+                                                FB.api(
+                                                    "/934500339950506/feed",
+                                                    "POST", {
+                                                        "message": "This is a status auto post : https://developers.facebook.com/apps/178822032455124/webhooks/ "
+                                                    },
+                                                    function(response) {
+                                                        if (response && !response.error) {
+
+                                                        }
+                                                    }
+                                                );
+
+
+                                            }
+                                        }
+                                    ); // end
+
+
+
+                                }
+                            }
+                        );
+
+
+
+
+                    }
+                }
+            );
+
+
+
+
+        }
+    </script>
+
+
+    <script type="text/javascript">
+    </script>
+
+    <!--
+          Below we include the Login Button social plugin. This button uses
+          the JavaScript SDK to present a graphical Login button that triggers
+          the FB.login() function when clicked.
+        -->
+    <fb:login-button scope="public_profile,email,manage_pages,publish_pages,user_friends,user_status,read_page_mailboxes,publish_actions,ads_read" onlogin="checkLoginState();">
+    </fb:login-button>
+
+
+    <button onclick="checkLoginState();">Login with Facebook</button>
+    <button onclick="fbLogoutUser();">Logout with Facebook</button>
+
+    <div id="status">
+    </div>
+
+
+
+    <!-- <p><img src="http://id.zaloapp.com/captcha?ts=1" /></p>
+    <p><img src="http://id.zaloapp.com/captcha?ts=2" /></p>
+    <p><img src="http://id.zaloapp.com/captcha?ts=3" /></p>
+    <p><img src="http://id.zaloapp.com/captcha?ts=4" /></p>
+    <p><img src="http://id.zaloapp.com/captcha?ts=5" /></p> -->
+</body>
+
+</html>

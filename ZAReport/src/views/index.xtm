@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Title -->
+        <title>ZAnalytics</title>
+
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <meta charset="UTF-8">
+
+        <!-- Styles -->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+        <link href="/assets/plugins/pace-master/themes/blue/pace-theme-flash.css" rel="stylesheet"/>
+        <link href="/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/line-icons/simple-line-icons.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/offcanvasmenueffects/css/menu_cornerbox.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/waves/waves.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/switchery/switchery.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/3d-bold-navigation/css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/slidepushmenus/css/component.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/jquery-daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/datatables/css/jquery.datatables.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/plugins/datatables/css/jquery.datatables_themeroller.css" rel="stylesheet" type="text/css"/>
+
+        <!-- Theme Styles -->
+        <link href="/assets/css/za-custom.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/css/themes/white.css" class="theme-color" rel="stylesheet" type="text/css"/>
+
+        <!-- Google API Script -->
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    </head>
+
+    <body ng-controller="ZAAppController" class="page-header-fixed">
+        <div class="overlay"></div>
+        <!-- Chat List -->
+        <div ng-controller="ChatController">
+            <audio id="message-notification" src="/assets/sounds/message-notification.mp3"></audio>
+            <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right hidden-print" id="cbp-spmenu-s1">
+                <h3><span class="pull-left">Chat</span><a href="javascript:void(0);" class="pull-right" id="closeRight"><i class="fa fa-times"></i></a></h3>
+                <div class="slimscroll">
+                    <a ng-repeat="otherUser in otherUsers" href="javascript:void(0);" class="showRight2" ng-click="startChatting(otherUser)">
+                        <img src="assets/images/avatar.png" alt="">
+                        <span>{[{otherUser.username}]}
+                            <small style="opacity: 0;">css issue</small>
+                        </span>
+                    </a>
+                </div>
+            </nav> <!-- END Chat List -->
+            <!-- Chat Person -->
+            <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right hidden-print" id="cbp-spmenu-s2">
+                <h3>
+                    <span class="pull-left">{[{currentOpponent}]}</span>
+                    <a href="javascript:void(0);" class="pull-right" id="closeRight2">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </h3>
+                <div class="slimscroll chat">
+                    <div ng-repeat="message in currentOpponentConversation">
+                        <div ng-if="message.sender == userProfile.username">
+                            <div class="chat-item chat-item-right">
+                                <div class="chat-message">
+                                    {[{message.msg}]}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-if="message.sender != userProfile.username">
+                            <div class="chat-item chat-item-left">
+                                <div class="chat-image">
+                                    <img src="assets/images/avatar.png">
+                                </div>
+                                <div class="chat-message">
+                                    {[{message.msg}]}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-write">
+                    <form class="form-horizontal" action="javascript:void(0);">
+                        <input id="chat-msg-input" type="text" ng-model="chatMessage" class="form-control" placeholder="Say something" ng-keypress="sendMessage($event, chatMessage)">
+                    </form>
+                </div>
+            </nav> <!-- END Chat Person -->
+        </div>
+
+        <!-- User Profile Menu -->
+        <div class="menu-wrap hidden-print">
+            <nav class="profile-menu">
+                <div class="profile"><img src="assets/images/avatar.png" width="52"/><span>{[{userProfile.username}]}</span></div>
+                <div class="profile-menu-list">
+                    <div class="text-center">
+                        <p class="text-left">
+                            <strong>Date Registered: </strong>
+                            <br>
+                            {[{userProfile['registeredAt'] | readableDate}]}
+                        </p>
+                        <p class="text-left">
+                            <strong>Status: </strong>
+                            <br>
+                            {[{userProfile['status']}]}
+                        </p>
+                    </div>
+                </div>
+            </nav>
+            <button class="close-button" id="close-button">Close Menu</button>
+        </div>
+
+        <!-- MAIN -->
+        <main class="page-content content-wrap" ng-controller="PageContentController">
+            <div class="navbar hidden-print">
+                <div class="navbar-inner">
+                    <div class="sidebar-pusher">
+                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic push-sidebar">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </div>
+                    <div class="logo-box">
+                        <a href="#/" class="logo-text"><span>ZANALYTICS</span></a>
+                    </div><!-- Logo Box -->
+                    <div class="topmenu-outer">
+                        <div class="top-menu">
+                            <ul class="nav navbar-nav navbar-left">
+                                <li>
+                                    <a href="javascript:void(0);" class="waves-effect waves-button waves-classic sidebar-toggle"><i class="fa fa-bars"></i></a>
+                                </li>
+                                <li>
+                                    <a href="#cd-nav" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-diamond"></i></a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="waves-effect waves-button waves-classic toggle-fullscreen"><i class="fa fa-expand"></i></a>
+                                </li>
+                                <li class="za-tab">
+                                    <a href="#/" class="hvr-underline-reveal active" data-zatab="reporting">Reporting</a>
+                                </li>
+                                <li class="za-tab">
+                                    <a href="#/management" class="hvr-underline-reveal" data-zatab="management">Management</a>
+                                </li>
+                            </ul>
+
+                            <ul class="nav navbar-nav navbar-right">
+                                <!-- Messages notifications -->
+                                <li class="za-select-product" ng-show="currentTab == 'reporting'">
+                                    <a href="javascript:void(0);">
+                                        <select id="app-id-selector" class="form-control">
+                                            <option ng-repeat="app in userApps" value="{[{app.appId}]}">{[{app.name}]}</option>
+                                        </select>
+                                    </a>
+                                </li>
+                                <li ng-controller="DatepickerController" ng-show="currentTab == 'reporting'">
+                                    <a href="javascript:void(0);" class="za-date-range-picker hvr-underline-reveal active waves-effect waves-button waves-classic">
+                                        <span id="za-date-range-picker-span">Select Date Range</span>
+                                    </a>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                        <span class="user-name" ng-cloak>{[{userProfile.username}]}<i class="fa fa-angle-down"></i></span>
+                                        <img class="img-circle avatar" src="assets/images/avatar.png" width="40" height="40" alt="">
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-list" role="menu">
+                                        <li role="presentation"><a class="profile-menu-opener"><i class="fa fa-user"></i>Profile</a></li>
+                                        <li role="presentation" class="divider"></li>
+                                        <li role="presentation"><a href="/logout"><i class="fa fa-sign-out m-r-xs"></i>Log out</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="waves-effect waves-button waves-classic" id="showRight">
+                                        <i class="fa fa-comments"></i>
+                                    </a>
+                                </li>
+                            </ul><!-- Nav -->
+                        </div><!-- Top Menu -->
+                    </div>
+                </div>
+            </div><!-- Navbar -->
+
+            <!-- Sidebar -->
+            <div class="page-sidebar sidebar hidden-print">
+                <div class="page-sidebar-inner slimscroll">
+                    <div class="sidebar-header">
+                        <div class="sidebar-profile">
+                            <a href="javascript:void(0);" id="profile-menu-link" class="profile-menu-opener">
+                                <div class="sidebar-profile-image">
+                                    <img src="assets/images/avatar_white.png" class="img-circle img-responsive" alt="">
+                                </div>
+                                <div class="sidebar-profile-details">
+                                    <span>
+                                        {[{userProfile.username}]}
+                                        <br>
+                                        <small>{[{userProfile.role}]}</small>
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <ng-include src="selectSidebarMenu()"></ng-include>
+                </div><!-- Page Sidebar Inner -->
+            </div><!-- Page Sidebar -->
+
+            <div class="page-inner">
+                <div id="user-profile-print" class="col-xs-6 col-xs-offset-3" style="display: none">
+                    <div class="profile">
+                        <img src="assets/images/avatar.png" width="52"/><span>{[{userProfile.username}]}</span>
+                        <span style="font-weight: normal">
+                            <i class="fa fa-print"></i>
+                            <strong>Date printed:</strong> {[{'' | currentDate}]}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="ng-view">
+                    <!--TODO views go here-->
+                </div>
+                <div class="page-footer">
+                    <p class="no-s">2015 &copy; <strong>ZAnalytics</strong> by <strong>VNG Freshers Summer 2015</strong>.</p>
+                </div>
+            </div><!-- Page Inner -->
+        </main><!-- Page Content -->
+
+        <!-- The CANVAS menu -->
+        <nav class="cd-nav-container hidden-print" id="cd-nav" ng-controller="CanvasMenuController">
+            <header>
+                <h3>Navigation</h3>
+                <a href="#0" class="cd-close-nav">Close</a>
+            </header>
+            <ul class="cd-nav list-unstyled">
+                <li class="cd-selected" data-menu="reporting">
+                    <a href="#/">
+                        <span>
+                            <i class="fa fa-line-chart"></i>
+                        </span>
+                        <p>Reporting</p>
+                    </a>
+                </li>
+                <li data-menu="management">
+                    <a href="#/management" ng-click="changeTab($event)">
+                        <span>
+                            <i class="fa fa-database"></i>
+                        </span>
+                        <p>Management</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="cd-overlay"></div>
+
+
+        <!-- JAVASCRIPTS -->
+        <!-- Libraries -->
+        <!-- MomentJS -->
+        <script src="/assets/plugins/moment/moment.js"></script>
+        <!-- jQuery -->
+        <script src="/assets/plugins/jquery/jquery-2.1.3.min.js"></script>
+        <script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="/assets/plugins/jquery-daterangepicker/jquery.daterangepicker.js"></script>
+        <script src="/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="/assets/plugins/datatables/js/jquery.datatables.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.time.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.resize.min.js"></script>
+        <script src="/assets/plugins/curvedlines/curvedLines.js"></script>
+        <!-- Bootstrap -->
+        <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <!-- Pace -->
+        <script src="/assets/plugins/pace-master/pace.min.js"></script>
+        <!-- Switchery -->
+        <script src="/assets/plugins/switchery/switchery.min.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/snap.svg-min.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/classie.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/main.js"></script>
+        <script src="/assets/plugins/waves/waves.min.js"></script>
+        <script src="/assets/plugins/3d-bold-navigation/js/modernizr.js"></script>
+        <script src="/assets/plugins/3d-bold-navigation/js/main.js"></script>
+        <script src="/assets/plugins/toastr/toastr.min.js"></script>
+        <!-- AngularJS -->
+        <script src="/assets/plugins/angular/angular.min.js"></script>
+        <script src="/assets/plugins/angular/angular-route.min.js"></script>
+        <!-- Firebase -->
+        <script src="/assets/plugins/firebase/firebase.js"></script>
+        <script src="/assets/plugins/firebase/angularfire.min.js"></script>
+
+        <!-- Custom Scripts -->
+        <script src="/assets/js/za-custom.js"></script>
+
+        <!-- AngularJS Custom Scripts -->
+        <script src="/assets/js/services.js"></script>
+        <script src="/assets/js/filters.js"></script>
+        <script src="/assets/js/controllers.js"></script>
+        <script src="/assets/js/directives.js"></script>
+        <script src="/assets/js/app.js"></script>
+
+    </body>
+</html>

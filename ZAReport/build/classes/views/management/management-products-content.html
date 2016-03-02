@@ -1,0 +1,288 @@
+<div class="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <div style="margin-bottom: 5px;">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-new-product-modal" >
+                            <i class="fa fa-plus"></i>
+                            Add new product
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="display table za-data-table" style="width: 100%; cellspacing: 0;">
+                            <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Name</th>
+                                <th>URL</th>
+                                <th>Date Created</th>
+                                <th>Timeout (min)</th>
+                                <th>Status</th>
+                                <th>Role</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="row in productsTableData">
+                                <td>{[{row.appId}]}</td>
+                                <td>{[{row.name}]}</td>
+                                <td>{[{row.url}]}</td>
+                                <td>{[{row.createdAt | readableDate}]}</td>
+                                <td>{[{row.timeout}]}</td>
+                                <td>
+                                    {[{row.status}]}
+                                </td>
+                                <td>{[{row.role}]}</td>
+                                <td>
+                                    <div ng-if="row.role == 'admin'">
+                                        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="View embedded code" ng-click="viewEmbeddedCode($event)">
+                                            <i class="fa fa-code"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="View list of reporters" ng-click="viewListOfReporters($event)">
+                                            <i class="fa fa-list-ul"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Edit" ng-click="startEditProduct($event)">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete" ng-click="confirmDeleteProduct($event)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div ng-if="row.role != 'admin'">
+                                        <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Leave this Product" ng-click="confirmLeaveProduct($event)">
+                                            <i class="fa fa-sign-out"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- END col-md-12 -->
+    </div> <!-- END row -->
+</div> <!-- END main-wrapper -->
+
+<div class="modal fade" id="view-embedded-code-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">View product's embedded code</h4>
+            </div>
+            <div class="modal-body">
+                <textarea name="" id="" cols="30" rows="10" readonly>
+                    {[{selectedApp.embedCode}]}
+                </textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add-new-product-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new product</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="product-name" class="control-label">Product Name</label>
+                        <input type="text" class="form-control" id="product-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="product-url" class="control-label">Product URL</label>
+                        <textarea class="form-control" id="product-url"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btn-add-new-product" ng-click="addNewProductBtnHandler($event)" type="button" class="btn btn-success">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit-product-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel3">Edit product info</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="edit-product-name" class="control-label">Product Name</label>
+                        <input type="text" class="form-control" id="edit-product-name" value="{[{selectedApp.name}]}">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-product-timeout" class="control-label">Timeout (min)</label>
+                        <input type="number" class="form-control" id="edit-product-timeout" value="{[{selectedApp.timeout}]}">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Status</label>
+                        <div ng-if="selectedApp.status == 'enable'">
+                            <label class="radio-inline">
+                                <input type="radio" name="edit-product-status" checked="checked" data-status="enable">
+                                Enable
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="edit-product-status" data-status="disabled">
+                                Disabled
+                            </label>
+                        </div>
+                        <div ng-if="selectedApp.status != 'enable'">
+                            <label class="radio-inline"><input type="radio" name="edit-product-status" checked="checked" data-status="disabled">Disabled</label>
+                            <label class="radio-inline"><input type="radio" name="edit-product-status" data-status="enable">Enable</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btn-edit-product" ng-click="editProductBtnHandler($event)" type="button" class="btn btn-success">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-product-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel2">Confirm delete product</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the following product: <strong>{[{selectedApp.name}]}</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btn-delete-product" ng-click="deleteProductBtnHandler($event)" type="button" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="view-reporters-list-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myLargeModalLabel">
+                    Reporters on product:
+                    <span style="text-transform: uppercase">{[{selectedApp.name}]}</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 5px;">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-reporter-modal" >
+                        <i class="fa fa-plus"></i>
+                        Add new reporter
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="display table" style="width: 100%; cellspacing: 0;">
+                        <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Date Registered</th>
+                            <th>Role</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in selectedAppReporters">
+                            <td>{[{row.userId}]}</td>
+                            <td>{[{row.username}]}</td>
+                            <td>{[{row.registeredAt | readableDate}]}</td>
+                            <td>{[{row.role}]}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Edit reporter role" ng-click="startEditReporter($event)">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Remove reporter" ng-click="confirmDeleteReporter($event)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add-reporter-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel4">Add Reporter</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="reporter-name" class="control-label">Reporter Name</label>
+                        <input type="text" class="form-control" id="reporter-name">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btn-add-reporter" ng-click="addNewReporterBtnHandler($event)" type="button" class="btn btn-success">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-reporter-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel5" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel5">Confirm remove reporter</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove the following reporter: <strong>{[{selectedAppReporter.username}]}</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btn-reporter-product" ng-click="removeReporterBtnHandler($event)" type="button" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reporter-leave-product-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel6" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel6">Confirm leaving product</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to leave the following product: <strong>{[{selectedApp.name}]}</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btn-reporter-leave-product" ng-click="reporterLeaveProduct($event)" type="button" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

